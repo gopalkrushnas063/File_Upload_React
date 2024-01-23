@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    #preview {
+      max-width: 300px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Upload</h1>
+  <form action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*">
+    <button type="submit">Upload Image</button>
+  </form>
+  <div id="preview"></div>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const input = document.querySelector('input[name="image"]');
+      const preview = document.getElementById('preview');
+
+      const formData = new FormData();
+      formData.append('image', input.files[0]);
+
+      try {
+        const response = await fetch('http://localhost:3000/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          preview.innerHTML = '<p>Image uploaded successfully!</p>';
+        } else {
+          preview.innerHTML = '<p>Error uploading image. Please try again.</p>';
+        }
+      } catch (error) {
+        preview.innerHTML = `<p>Error: ${error.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
